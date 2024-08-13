@@ -9,7 +9,7 @@
 
 - **User Authentication:** Sign up and log in to manage personal expenses.
 - **Expense Management:** Add, edit, and delete expense entries.
-- **Expense Overview:** View and manage expenses in a table format with sorting and filtering options.
+- **Expense Overview:** View and manage expenses.
 - **Responsive Design:** A mobile-friendly interface for seamless use across various devices.
 
 ## Technologies Used
@@ -24,7 +24,6 @@
 
 - Python 3.x
 - MongoDB
-- Node.js (optional, for development tools)
 
 ### Installation
 
