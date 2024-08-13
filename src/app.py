@@ -10,7 +10,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 bcrypt = Bcrypt(app)
 
 # Connecting to MongoDB
-client = MongoClient(os.getenv('DATABASE_URL')) 
+client = MongoClient(os.getenv('CONNECTION_STRING')) 
 db = client.TrackExpense  
 users = db.users  
 expenses_collection = db.expenses
@@ -153,4 +153,4 @@ def edit_entry():
         return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
