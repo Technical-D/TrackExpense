@@ -30,7 +30,7 @@
     </div>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
-              <div class="flash">{{ messages[0] }}</div>
+              <div class="flash" id="flash-msg">{{ messages[0] }}</div>
             {% endif %}
     {% endwith %}
     <div class="expenses-table">

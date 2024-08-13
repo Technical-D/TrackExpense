@@ -206,15 +206,15 @@ section{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
     font-size: 2rem;
 }
 .table-overview .btn{
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     padding: 1rem 1rem;
+    margin-top: 0;
 }
 .expenses-table {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: center;
 }
 
@@ -329,6 +329,7 @@ section{
     color: red; 
     text-align: center; 
     font-size: 1.7rem;
+    transition: opacity 0.5s ease-out;
 }
 
 /* Media Queries */

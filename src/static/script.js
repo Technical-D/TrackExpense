@@ -71,3 +71,16 @@ window.onclick = function (event) {
 function confirmDelete() {
     return confirm("Are you sure you want to delete this expense?");
 }
+
+// Remove alert after 3 seconds
+document.addEventListener('DOMContentLoaded', (event) => {
+
+    const flashMessage = document.getElementById('flash-msg');
+    
+    if (flashMessage) {
+        setTimeout(() => {
+            flashMessage.style.opacity = '0';
+            flashMessage.remove();
+        }, 8000);
+    }
+});
