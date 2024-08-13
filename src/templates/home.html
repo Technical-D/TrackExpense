@@ -1,0 +1,134 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackExpense</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/wallet-solid.ico') }}">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Icon CDN -->
+    <script src="https://kit.fontawesome.com/f6f8f493f3.js" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <!-- header section  -->
+<header>
+    <div class="header">
+        <a  class="logo"><i class="fas fa-wallet"></i>TrackExpense</a>
+        <div class="icons">
+            <a href="{{ url_for('logout') }}"><span>logout</span><i class="fa-solid fa-right-from-bracket"></i></a>
+        </div>
+    </div>
+</header>
+<section class="home" id="home">
+    <div class="welcome-message"><h2>Hello, {{ name }}!</h2></div>
+    
+    <div class="table-overview">
+        <h3>Expense Overview</h3>
+        <button class="btn add-btn" onclick="window.location.href='#'"><i class="fa-solid fa-plus"></i> Add Entry</button>
+    </div>
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+              <div class="flash">{{ messages[0] }}</div>
+            {% endif %}
+    {% endwith %}
+    <div class="expenses-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for expense in expenses %}
+                <tr>
+                    <td>{{ expense.date }}</td>
+                    <td>{{ expense.description }}</td>
+                    <td>₹{{ "{:.2f}".format(expense.amount) }}</td>
+                    <td>{{ expense.method }}</td>
+                    <td>
+                        <button class="edit-btn" onclick="openEditModal('{{ expense._id }}', '{{ expense.date }}', '{{ expense.description }}', '{{ expense.amount }}', '{{ expense.method }}')">
+                            <i class="fa-solid fa-pen"></i> Edit
+                        </button>
+                        <form action="{{ url_for('delete_expense', expense_id=expense._id) }}" method="post" style="display:inline;" onsubmit="return confirmDelete()">
+                            <button type="submit" class="delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Add Entry Modal -->
+<div id="addEntryModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Add New Expense</h2>
+        <form action="{{ url_for('add_entry') }}" method="POST">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+            
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" placeholder="Enter description" required>
+            
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount" placeholder="Enter amount" required>
+            
+            <label for="method">Method:</label>
+            <select id="method" name="method" required>
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+                
+            </select>
+            
+            <button type="submit" class="submit-btn btn">Add Expense</button>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Expense Modal -->
+<div id="editExpenseModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Edit Expense</h2>
+        <form action="{{ url_for('edit_entry') }}" id="editExpenseForm" method="POST">
+            <input type="hidden" id="editExpenseId" name="expense_id">
+            
+            <label for="editDate">Date:</label>
+            <input type="date" id="editDate" name="date" required>
+            
+            <label for="editDescription">Description:</label>
+            <input type="text" id="editDescription" name="description" placeholder="Enter description" required>
+            
+            <label for="editAmount">Amount:</label>
+            <input type="number" id="editAmount" name="amount" placeholder="Enter amount" required>
+            
+            <label for="editMethod">Method:</label>
+            <select id="editMethod" name="method" required>
+                <option value="UPI">UPI</option>
+                <option value="Cash">Cash</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Debit Card">Debit Card</option>
+            </select>
+            
+            <button type="submit" class="submit-btn btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<!-- footer   -->
+<section class="footer" id="footer">
+    <h1 class="copyright">&#169;2024 <span>TrackExpense</span> .inc | All right reserved!</h1>
+</section>  
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
