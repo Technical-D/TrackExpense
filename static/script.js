@@ -9,7 +9,6 @@ btn.onclick = function () {
 
 span.onclick = function () {
     modal.style.display = "none";
-    console.log("clicked");
 };
 
 
@@ -58,14 +57,6 @@ for (let btn of closeBtns) {
     };
 }
 
-window.onclick = function (event) {
-    if (event.target == editExpenseModal) {
-        editExpenseModal.style.display = 'none';
-    }
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-};
 
 // Delete confirmation modal
 function confirmDelete() {
@@ -84,3 +75,74 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }, 8000);
     }
 });
+
+// Pagination variables
+const rowsPerPage = 10;
+let currentPage = 1;
+
+function paginateTable() {
+    const table = document.getElementById('expenseTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    for (let i = 0; i < rows.length; i++) {
+        rows[i].style.display = 'none';
+    }
+
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    for (let i = start; i < end && i < rows.length; i++) {
+        rows[i].style.display = '';
+    }
+
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+
+    document.querySelector('.pagination button:first-child').disabled = currentPage === 1;
+    document.querySelector('.pagination button:last-child').disabled = currentPage === totalPages;
+}
+
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        paginateTable();
+    }
+}
+
+function nextPage() {
+    const table = document.getElementById('expenseTable');
+    const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+    const totalPages = Math.ceil(rows.length / rowsPerPage);
+
+    if (currentPage < totalPages) {
+        currentPage++;
+        paginateTable();
+    }
+}
+
+window.onload = paginateTable;
+
+// Filter Modal
+var filtermodal = document.getElementById('filterExpensesModal');
+var filterBtn = document.querySelector('.filter-btn');
+var closeBtn = filtermodal.querySelector('.filter-close-btn');
+
+filterBtn.onclick = function () {
+    filtermodal.style.display = "block";
+};
+
+closeBtn.onclick = function () {
+    filtermodal.style.display = "none";
+};
+
+// closing modal on clicking outside
+window.onclick = function (event) {
+    if (event.target == editExpenseModal) {
+        editExpenseModal.style.display = 'none';
+    }
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+    if (event.target === filtermodal) {
+        filtermodal.style.display = 'none';
+    }
+};

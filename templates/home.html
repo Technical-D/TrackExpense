@@ -26,15 +26,19 @@
     
     <div class="table-overview">
         <h3>Expense Overview</h3>
-        <button class="btn add-btn" onclick="window.location.href='#'"><i class="fa-solid fa-plus"></i> Add Entry</button>
+        <div>
+            <button class="filter-btn btn">Filter Options</button>
+            <button class="btn add-btn" onclick="window.location.href='#'"><i class="fa-solid fa-plus"></i> Add Entry</button>
+        </div>
+        
     </div>
     {% with messages = get_flashed_messages() %}
             {% if messages %}
               <div class="flash" id="flash-msg">{{ messages[0] }}</div>
             {% endif %}
     {% endwith %}
-    <div class="expenses-table">
-        <table>
+    <div class="expenses-table" >
+        <table id="expenseTable">
             <thead>
                 <tr>
                     <th>Date</th>
@@ -64,6 +68,13 @@
             </tbody>
         </table>
     </div>
+    <!-- Pagination Controls -->
+    <div class="pagination" id="paginationControls">
+        <button class="btn" onclick="prevPage()">Previous</button>
+        <span id="pageInfo"></span>
+        <button class="btn" onclick="nextPage()">Next</button>
+    </div>
+
 </section>
 
 <!-- Add Entry Modal -->
@@ -121,6 +132,45 @@
             </select>
             
             <button type="submit" class="submit-btn btn">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div id="filterExpensesModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn filter-close-btn">&times;</span>
+        <h2>Filter Expenses</h2>
+        <form id="filterForm" action="{{ url_for('filter_expenses') }}" method="POST">
+            <!-- Date Range Filter -->
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" value="{{ start_date }}">
+            
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" value="{{ end_date }}">
+            
+            <!-- Payment Method Filter -->
+            <label for="method">Method:</label>
+            <select id="method" name="method">
+                <option value="">All Methods</option>
+                <option value="UPI" {% if method == 'UPI' %}selected{% endif %}>UPI</option>
+                <option value="Cash" {% if method == 'Cash' %}selected{% endif %}>Cash</option>
+                <option value="Credit Card" {% if method == 'Credit Card' %}selected{% endif %}>Credit Card</option>
+                <option value="Debit Card" {% if method == 'Debit Card' %}selected{% endif %}>Debit Card</option>
+            </select>
+            
+            <!-- Sorting Options -->
+            <label for="sortBy">Sort By:</label>
+            <select id="sortBy" name="sortBy">
+                <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date: Newest First</option>
+                <option value="date_asc" {% if sort_by == 'date_asc' %}selected{% endif %}>Date: Oldest First</option>
+                <option value="amount_desc" {% if sort_by == 'amount_desc' %}selected{% endif %}>Amount: High to Low</option>
+                <option value="amount_asc" {% if sort_by == 'amount_asc' %}selected{% endif %}>Amount: Low to High</option>
+            </select>
+            <div class="filter-btn-div">
+                <button type="submit" class="submit-btn btn">Apply Filters</button>
+                <a type="button" class="btn" href="{{url_for('home')}}">Clear Filters</a>
+            </div>
         </form>
     </div>
 </div>

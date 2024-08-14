@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask_bcrypt import Bcrypt
-from pymongo import MongoClient
+from pymongo import MongoClient, DESCENDING, ASCENDING
 from dotenv import load_dotenv
 import os
 from bson import ObjectId
@@ -69,7 +69,7 @@ def home():
     if 'email' in session:
         user = users.find_one({'email': session['email']})
         user_id = session['email']
-        expenses = expenses_collection.find({'user_id': user_id})
+        expenses = expenses_collection.find({'user_id': user_id}).sort('date', DESCENDING)
         return render_template('home.html', name=user['name'], expenses=expenses)
     else:
         return redirect(url_for('login'))
@@ -152,5 +152,47 @@ def edit_entry():
         flash('You need to log in first.')
         return redirect(url_for('login'))
 
+@app.route('/filter_expenses', methods=['POST'])
+def filter_expenses():
+    if 'email' in session:
+        user = users.find_one({'email': session['email']})
+        user_id = session['email']
+        start_date = request.form.get('startDate')
+        end_date = request.form.get('endDate')
+        method = request.form.get('method')
+        sort_by = request.form.get('sortBy')
+
+        # Build query
+        query = {}
+        query['user_id'] = user_id  
+        if start_date:
+            query['date'] = {'$gte': start_date}
+        if end_date:
+            query['date'] = query.get('date', {})
+            query['date']['$lte'] = end_date
+        if method:
+            query['method'] = method
+
+        # Set sort order
+        sort_order = []
+        if sort_by == 'date_desc':
+            sort_order.append(('date', DESCENDING))
+        elif sort_by == 'date_asc':
+            sort_order.append(('date', ASCENDING))
+        elif sort_by == 'amount_desc':
+            sort_order.append(('amount', DESCENDING))
+        elif sort_by == 'amount_asc':
+            sort_order.append(('amount', ASCENDING))
+
+        expenses = expenses_collection.find(query).sort(sort_order)
+        return render_template('home.html', name=user['name'], expenses=expenses, start_date=start_date, end_date=end_date, method=method, sort_by=sort_by)
+    else:
+        return redirect(url_for('login'))
+    
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
+
+# if __name__ == '__main__':  
+#     app.run(debug=True)

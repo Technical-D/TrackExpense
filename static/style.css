@@ -167,7 +167,7 @@ section{
 .footer {
     padding: 0;
     margin-bottom: 0;
-    position: fixed;
+    /* position: fixed; */
     bottom: 0;
     width: 100%;
 }
@@ -332,6 +332,42 @@ section{
     transition: opacity 0.5s ease-out;
 }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 1.4rem;
+}
+#pageInfo{
+    font-size: 1.2rem;
+}
+
+button:disabled,
+button[disabled]{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor:default;
+}
+button:disabled:hover,
+button[disabled]:hover{
+    background-color:#cccccc ;
+}
+
+.filter-btn-div a{
+    display: block;
+}
+.filter-btn-div{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 /* Media Queries */
 @media (max-width: 768px) {
 html {
